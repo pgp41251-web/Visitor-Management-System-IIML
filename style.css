@@ -27,6 +27,11 @@
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
   --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
   --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.15);
+
+  /* Fluid layout tokens */
+  --sidebar-w: 280px;
+  --content-pad: clamp(1.25rem, 3vw, 2.5rem);
+  --radius-card: clamp(14px, 2vw, 20px);
 }
 
 /* Reset and Core Styles */
@@ -41,27 +46,84 @@ body {
   background-color: var(--bg-app);
   color: var(--text-main);
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
   line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Keyboard focus ring */
+:focus-visible {
+  outline: 2px solid var(--primary-gold);
+  outline-offset: 2px;
 }
 
 /* App Container Layout */
 .app-container {
   display: flex;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* Sidebar Navigation */
 .sidebar {
-  width: 280px;
+  width: var(--sidebar-w);
   background-color: var(--bg-sidebar);
   border-right: 1px solid var(--border-color);
   padding: 2rem 1.5rem;
+  padding-top: max(2rem, env(safe-area-inset-top));
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 200;
 }
+
+/* Backdrop shown behind mobile drawer */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 8, 17, 0.6);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 150;
+}
+
+.sidebar-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Close button lives inside drawer, hidden on desktop */
+.sidebar-close {
+  display: none;
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+}
+
+.sidebar-close:hover { color: var(--primary-gold); }
 
 .brand {
   display: flex;
@@ -166,11 +228,17 @@ body {
 
 /* Main Content Area */
 .main-content {
-  flex-grow: 1;
-  padding: 2.5rem;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: var(--content-pad);
+  padding-bottom: max(var(--content-pad), env(safe-area-inset-bottom));
+  width: 100%;
+}
+
+.main-content > * {
   max-width: 1600px;
-  margin: 0 auto;
-  width: calc(100% - 280px);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Header */
@@ -178,20 +246,56 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2.5rem;
+  gap: 1rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
 }
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+/* Hamburger toggle — hidden on desktop */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.menu-toggle span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--primary-gold);
+  border-radius: 2px;
+  transition: all 0.25s ease;
+}
+
+.header-title-text { min-width: 0; }
 
 .header-title h1 {
   font-family: var(--font-title);
-  font-size: 2rem;
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
   font-weight: 700;
   color: var(--text-main);
   margin-bottom: 0.25rem;
+  line-height: 1.15;
 }
 
 .header-title p {
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: clamp(0.82rem, 1.5vw, 0.95rem);
 }
 
 .live-clock {
@@ -223,9 +327,9 @@ body {
 /* Stats Cards */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
 }
 
 .stat-card {
@@ -283,7 +387,7 @@ body {
 
 .stat-value {
   font-family: var(--font-title);
-  font-size: 1.75rem;
+  font-size: clamp(1.5rem, 3vw, 1.75rem);
   font-weight: 700;
   color: var(--text-main);
   line-height: 1.2;
@@ -293,8 +397,8 @@ body {
 /* Dashboard Body Splits */
 .dashboard-body {
   display: grid;
-  grid-template-columns: 420px 1fr;
-  gap: 2rem;
+  grid-template-columns: minmax(340px, 420px) minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
   align-items: start;
 }
 
@@ -490,7 +594,7 @@ body {
 }
 
 .logs-table th {
-  background-color: rgba(8, 14, 30, 0.4);
+  background-color: #0b1226;
   padding: 1rem;
   font-weight: 600;
   color: var(--text-muted);
@@ -498,6 +602,9 @@ body {
   font-size: 0.75rem;
   letter-spacing: 0.5px;
   border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .logs-table td {
@@ -1093,64 +1200,317 @@ body {
   }
 }
 
-/* Responsive Breakpoints */
-@media (max-width: 1100px) {
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS
+   Desktop-first, degrading through tablet → mobile → small
+   ============================================================ */
+
+/* Large tablets / small laptops: stack the dashboard, keep sidebar */
+@media (max-width: 1080px) {
   .dashboard-body {
     grid-template-columns: 1fr;
   }
+
+  .form-panel {
+    max-width: 640px;
+  }
 }
 
-@media (max-width: 800px) {
-  .app-container {
-    flex-direction: column;
-  }
-  
+/* Tablet & below: sidebar becomes a slide-out drawer */
+@media (max-width: 900px) {
   .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    padding: 1.5rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    height: 100dvh;
+    transform: translateX(-100%);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    padding: 1.75rem 1.5rem;
+    padding-top: max(1.75rem, env(safe-area-inset-top));
   }
-  
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-close {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  /* Hamburger → X when drawer open */
+  .menu-toggle.active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-toggle.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
   .brand {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
-  
-  .nav-menu {
-    flex-direction: row;
-    overflow-x: auto;
-    padding-bottom: 0.5rem;
-  }
-  
+
+  /* Give nav items generous, thumb-friendly hit areas in the drawer */
   .nav-item {
-    padding: 0.6rem 1rem;
-    white-space: nowrap;
+    padding: 0.95rem 1.25rem;
+    font-size: 1rem;
   }
-  
-  .main-content {
+}
+
+/* Logs header + filters reflow before the table itself breaks */
+@media (max-width: 820px) {
+  .log-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filters {
     width: 100%;
-    padding: 1.5rem;
   }
-  
+
+  .search-box {
+    flex: 1;
+    width: auto;
+  }
+
+  .search-box input:focus {
+    width: 100%;
+  }
+}
+
+/* Phones: table → stacked cards, single-column form */
+@media (max-width: 680px) {
   .top-header {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 0.9rem;
+  }
+
+  .header-title {
+    align-items: center;
+  }
+
+  .header-title p {
+    display: none; /* subtitle is redundant on small screens */
+  }
+
+  .header-meta {
+    width: 100%;
+  }
+
+  .live-clock {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1rem;
+  }
+
+  .live-clock .time {
+    font-size: 1.05rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
-  .live-clock {
-    align-items: flex-start;
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
   }
-  
+
+  .filter-status {
+    width: 100%;
+  }
+
+  /* Make touch targets comfortable */
+  .btn-submit {
+    padding: 1.1rem;
+  }
+
+  .btn-table-action {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.8rem;
+  }
+
+  /* Convert the logs table into readable cards */
+  .table-container {
+    max-height: none;
+    overflow-x: visible;
+  }
+
+  .logs-table,
+  .logs-table thead,
+  .logs-table tbody,
+  .logs-table th,
+  .logs-table td,
+  .logs-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .logs-table thead {
+    display: none;
+  }
+
+  .logs-table tbody tr {
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    background: rgba(16, 27, 54, 0.45);
+    padding: 1.1rem 1.25rem;
+    position: relative;
+  }
+
+  .logs-table tbody tr:hover {
+    background-color: rgba(22, 37, 72, 0.55);
+  }
+
+  .logs-table td {
+    border: none;
+    padding: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    text-align: right;
+  }
+
+  .logs-table td > * {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .visitor-contact-cell {
+    overflow-wrap: anywhere;
+  }
+
+  .logs-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-muted);
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  /* Name/host cells stack their two lines nicely */
+  .visitor-name-cell,
+  .host-cell {
+    text-align: right;
+  }
+
+  .logs-table td.actions-cell {
+    justify-content: flex-end;
+    padding-top: 0.9rem;
+    margin-top: 0.4rem;
+    border-top: 1px solid var(--border-color);
+    gap: 0.6rem;
+  }
+
+  .logs-table td.actions-cell::before {
+    display: none;
+  }
+
+  .btn-table-action {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* Pass modal + card for smaller viewports */
+@media (max-width: 620px) {
+  .modal {
+    align-items: flex-end;
+  }
+
+  .modal-content {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 24px 24px 0 0;
+    padding: 1.75rem 1.25rem;
+    padding-bottom: max(1.75rem, env(safe-area-inset-bottom));
+    max-height: 94dvh;
+    overflow-y: auto;
+  }
+
   .pass-body {
     flex-direction: column;
+    gap: 1.5rem;
   }
-  
+
   .pass-visual {
     width: 100%;
     border-left: none;
-    border-top: 1px dashed rgba(255,255,255,0.1);
+    border-top: 1px dashed rgba(255, 255, 255, 0.12);
     padding-left: 0;
     padding-top: 1.5rem;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+
+  .btn-print,
+  .btn-close {
+    width: 100%;
+    text-align: center;
+    padding: 0.9rem 1.5rem;
+  }
+
+  .toast-container {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .toast {
+    min-width: 0;
+    width: 100%;
+    transform: translateY(150%);
+  }
+
+  .toast.show {
+    transform: translateY(0);
+  }
+}
+
+/* Very small phones */
+@media (max-width: 400px) {
+  .brand-text h2 {
+    font-size: 1.1rem;
+  }
+
+  .pass-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.6rem;
+  }
+
+  .pass-header-text h4 {
+    font-size: 0.8rem;
+  }
+}
+
+/* Print: hide chrome, isolate the pass (kept from original, consolidated) */
+@media print {
+  .menu-toggle,
+  .sidebar,
+  .sidebar-backdrop {
+    display: none !important;
   }
 }

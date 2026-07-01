@@ -14,8 +14,11 @@
 </head>
 <body>
   <div class="app-container">
+    <!-- Mobile sidebar backdrop -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
     <!-- Sidebar Navigation -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="brand">
         <div class="logo-container">
           <!-- Elegant Crest representation -->
@@ -36,6 +39,7 @@
           <h2>IIM Lucknow</h2>
           <span>Visitor Management</span>
         </div>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Close menu">&times;</button>
       </div>
 
       <nav class="nav-menu">
@@ -63,8 +67,13 @@
       <!-- Top Header -->
       <header class="top-header">
         <div class="header-title">
-          <h1 id="page-title">Visitor Dashboard</h1>
-          <p id="page-subtitle">Welcome to the IIM Lucknow Gate Pass & Visitor Control System</p>
+          <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="header-title-text">
+            <h1 id="page-title">Visitor Dashboard</h1>
+            <p id="page-subtitle">Welcome to the IIM Lucknow Gate Pass &amp; Visitor Control System</p>
+          </div>
         </div>
         <div class="header-meta">
           <div class="live-clock" id="live-clock">

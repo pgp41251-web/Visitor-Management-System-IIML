@@ -120,7 +120,13 @@ const elements = {
   // Sidebar navigation options
   navDashboard: document.getElementById('nav-dashboard'),
   navNewVisitor: document.getElementById('nav-new-visitor'),
-  navHistory: document.getElementById('nav-history')
+  navHistory: document.getElementById('nav-history'),
+
+  // Mobile drawer
+  sidebar: document.getElementById('sidebar'),
+  sidebarBackdrop: document.getElementById('sidebar-backdrop'),
+  sidebarClose: document.getElementById('sidebar-close'),
+  menuToggle: document.getElementById('menu-toggle')
 };
 
 // Update Date & Clock
@@ -217,21 +223,21 @@ const renderLogsTable = () => {
     const statusClass = v.status === 'active' ? 'active' : 'checkout';
     
     tr.innerHTML = `
-      <td class="pass-id-cell">${v.id}</td>
-      <td>
+      <td class="pass-id-cell" data-label="Pass ID">${v.id}</td>
+      <td data-label="Visitor Name">
         <div class="visitor-name-cell">${v.name}</div>
         <div class="visitor-contact-cell">${v.email || 'No Email'}</div>
       </td>
-      <td class="visitor-contact-cell">+91 ${v.phone}</td>
-      <td>
+      <td class="visitor-contact-cell" data-label="Contact Info">+91 ${v.phone}</td>
+      <td data-label="Host & Dept">
         <div class="host-cell">${v.hostName}</div>
         <span class="dept-tag">${v.hostDept}</span>
       </td>
-      <td class="time-cell">${formatPassDate(v.checkinTime)}</td>
-      <td>
+      <td class="time-cell" data-label="Check-In Time">${formatPassDate(v.checkinTime)}</td>
+      <td data-label="Status">
         <span class="badge ${statusClass}">${statusText}</span>
       </td>
-      <td class="actions-cell">
+      <td class="actions-cell" data-label="Actions">
         ${v.status === 'active' ? `
           <button class="btn-table-action btn-table-checkout" onclick="checkoutVisitor('${v.id}')">
             Check Out
@@ -412,11 +418,49 @@ const navigateToSection = (targetId) => {
   }
 };
 
+// Mobile drawer controls
+const openDrawer = () => {
+  elements.sidebar.classList.add('open');
+  elements.sidebarBackdrop.classList.add('show');
+  elements.menuToggle.classList.add('active');
+  elements.menuToggle.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+};
+
+const closeDrawer = () => {
+  elements.sidebar.classList.remove('open');
+  elements.sidebarBackdrop.classList.remove('show');
+  elements.menuToggle.classList.remove('active');
+  elements.menuToggle.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+};
+
 // Event Listeners Setup
 const setupEventListeners = () => {
   // Form submit
   elements.checkinForm.addEventListener('submit', handleCheckInSubmit);
-  
+
+  // Mobile drawer toggles
+  elements.menuToggle.addEventListener('click', () => {
+    elements.sidebar.classList.contains('open') ? closeDrawer() : openDrawer();
+  });
+  elements.sidebarBackdrop.addEventListener('click', closeDrawer);
+  elements.sidebarClose.addEventListener('click', closeDrawer);
+
+  // Escape closes drawer or modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (elements.sidebar.classList.contains('open')) closeDrawer();
+      if (elements.passModal.classList.contains('show')) closeModal();
+    }
+  });
+
+  // Reset drawer state when resizing up to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900 && elements.sidebar.classList.contains('open')) {
+      closeDrawer();
+    }
+  });
   // Search & Filters inputs
   elements.logSearch.addEventListener('input', renderLogsTable);
   elements.filterStatus.addEventListener('change', renderLogsTable);
@@ -439,17 +483,19 @@ const setupEventListeners = () => {
     elements.navHistory.classList.remove('active');
     elements.filterStatus.value = 'active';
     renderLogsTable();
+    closeDrawer();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-  
+
   elements.navNewVisitor.addEventListener('click', (e) => {
     e.preventDefault();
     elements.navDashboard.classList.remove('active');
     elements.navNewVisitor.classList.add('active');
     elements.navHistory.classList.remove('active');
+    closeDrawer();
     navigateToSection('form-panel-container');
   });
-  
+
   elements.navHistory.addEventListener('click', (e) => {
     e.preventDefault();
     elements.navDashboard.classList.remove('active');
@@ -457,6 +503,7 @@ const setupEventListeners = () => {
     elements.navHistory.classList.add('active');
     elements.filterStatus.value = 'all'; // Show all in history
     renderLogsTable();
+    closeDrawer();
     navigateToSection('logs-table');
   });
 };
