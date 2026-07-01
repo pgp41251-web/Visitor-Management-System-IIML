@@ -219,32 +219,32 @@ const renderLogsTable = () => {
   filteredVisitors.forEach(v => {
     const tr = document.createElement('tr');
     
-    const statusText = v.status === 'active' ? 'Active' : 'Checked Out';
+    const statusText = v.status === 'active' ? 'On campus' : 'Departed';
     const statusClass = v.status === 'active' ? 'active' : 'checkout';
     
     tr.innerHTML = `
-      <td class="pass-id-cell" data-label="Pass ID">${v.id}</td>
-      <td data-label="Visitor Name">
+      <td class="pass-id-cell" data-label="Pass">${v.id}</td>
+      <td data-label="Visitor">
         <div class="visitor-name-cell">${v.name}</div>
         <div class="visitor-contact-cell">${v.email || 'No Email'}</div>
       </td>
-      <td class="visitor-contact-cell" data-label="Contact Info">+91 ${v.phone}</td>
-      <td data-label="Host & Dept">
+      <td class="visitor-contact-cell" data-label="Mobile">+91 ${v.phone}</td>
+      <td data-label="Host">
         <div class="host-cell">${v.hostName}</div>
         <span class="dept-tag">${v.hostDept}</span>
       </td>
-      <td class="time-cell" data-label="Check-In Time">${formatPassDate(v.checkinTime)}</td>
-      <td data-label="Status">
+      <td class="time-cell" data-label="Arrived">${formatPassDate(v.checkinTime)}</td>
+      <td data-label="State">
         <span class="badge ${statusClass}">${statusText}</span>
       </td>
-      <td class="actions-cell" data-label="Actions">
+      <td class="actions-cell" data-label="Do">
         ${v.status === 'active' ? `
           <button class="btn-table-action btn-table-checkout" onclick="checkoutVisitor('${v.id}')">
-            Check Out
+            Check out
           </button>
         ` : ''}
         <button class="btn-table-action btn-table-pass" onclick="viewPassDetails('${v.id}')">
-          View Pass
+          Pass
         </button>
       </td>
     `;
@@ -377,11 +377,11 @@ window.viewPassDetails = (passId) => {
   if (visitor.status === 'checkout') {
     elements.passCheckoutTime.textContent = formatPassDate(visitor.checkoutTime);
     elements.passCheckoutRow.style.display = 'flex';
-    elements.passStatusBadge.textContent = 'CHECKED OUT';
+    elements.passStatusBadge.textContent = 'Departed';
     elements.passStatusBadge.className = 'pass-badge out';
   } else {
     elements.passCheckoutRow.style.display = 'none';
-    elements.passStatusBadge.textContent = 'ACTIVE ENTRY';
+    elements.passStatusBadge.textContent = 'On campus';
     elements.passStatusBadge.className = 'pass-badge';
   }
   
