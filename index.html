@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IIM Lucknow | Visitor Management Portal</title>
+  <meta name="description" content="Secure and modern visitor management portal for the Indian Institute of Management Lucknow (IIML). Register, track, and manage campus visitors.">
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-container">
+          <!-- Elegant Crest representation -->
+          <svg class="crest-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFD700" />
+                <stop offset="100%" stop-color="#B8860B" />
+              </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gold-grad)" stroke-width="4" />
+            <polygon points="50,15 80,75 20,75" fill="none" stroke="url(#gold-grad)" stroke-width="3" />
+            <path d="M 35,50 Q 50,30 65,50" fill="none" stroke="url(#gold-grad)" stroke-width="3" />
+            <text x="50" y="88" font-family="'Outfit', sans-serif" font-size="12" font-weight="bold" fill="url(#gold-grad)" text-anchor="middle">IIML</text>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h2>IIM Lucknow</h2>
+          <span>Visitor Management</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" class="nav-item active" id="nav-dashboard">
+          <span class="icon">📊</span> Dashboard
+        </a>
+        <a href="#" class="nav-item" id="nav-new-visitor">
+          <span class="icon">👤</span> New Registration
+        </a>
+        <a href="#" class="nav-item" id="nav-history">
+          <span class="icon">📋</span> Logs & History
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-status">
+          <span class="status-dot online"></span>
+          <span>Gate Portal: Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Header -->
+      <header class="top-header">
+        <div class="header-title">
+          <h1 id="page-title">Visitor Dashboard</h1>
+          <p id="page-subtitle">Welcome to the IIM Lucknow Gate Pass & Visitor Control System</p>
+        </div>
+        <div class="header-meta">
+          <div class="live-clock" id="live-clock">
+            <span class="date" id="current-date">July 1, 2026</span>
+            <span class="time" id="current-time">14:50 PM</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Statistics Row -->
+      <section class="stats-grid" id="stats-section">
+        <div class="stat-card" id="stat-active">
+          <div class="stat-icon-wrapper active">
+            <span class="stat-icon">🟢</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Currently Checked-In</span>
+            <h3 class="stat-value" id="count-active">0</h3>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-total-today">
+          <div class="stat-icon-wrapper total">
+            <span class="stat-icon">👥</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Total Visits Today</span>
+            <h3 class="stat-value" id="count-today">0</h3>
+          </div>
+        </div>
+
+        <div class="stat-card" id="stat-checkout">
+          <div class="stat-icon-wrapper checkout">
+            <span class="stat-icon">⚪</span>
+          </div>
+          <div class="stat-info">
+            <span class="stat-label">Checked Out Today</span>
+            <h3 class="stat-value" id="count-checkout">0</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard Split Layout -->
+      <section class="dashboard-body">
+        <!-- Left Panel: Visitor Check-In Form -->
+        <div class="panel-card form-panel" id="form-panel-container">
+          <div class="panel-header">
+            <h3>Visitor Registration Form</h3>
+            <p>Issue an entry pass for a new visitor</p>
+          </div>
+          <form id="checkin-form" class="checkin-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="visitor-name">Full Name <span class="required">*</span></label>
+                <input type="text" id="visitor-name" placeholder="John Doe" required autocomplete="off">
+              </div>
+              <div class="form-group">
+                <label for="visitor-phone">Contact Number <span class="required">*</span></label>
+                <input type="tel" id="visitor-phone" placeholder="9876543210" pattern="[0-9]{10}" title="Ten digit mobile number" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="visitor-email">Email Address</label>
+                <input type="email" id="visitor-email" placeholder="john.doe@example.com">
+              </div>
+              <div class="form-group">
+                <label for="visitor-purpose">Purpose of Visit <span class="required">*</span></label>
+                <select id="visitor-purpose" required>
+                  <option value="" disabled selected>Select Purpose</option>
+                  <option value="Official Meeting">Official Meeting</option>
+                  <option value="Guest Lecture">Guest Lecture</option>
+                  <option value="Interview">Recruitment / Interview</option>
+                  <option value="Vendor / Maintenance">Vendor / Maintenance</option>
+                  <option value="Personal Visit">Personal Visit</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="host-name">Host Name (Who is being visited?) <span class="required">*</span></label>
+                <input type="text" id="host-name" placeholder="Prof. S. Sharma" required>
+              </div>
+              <div class="form-group">
+                <label for="host-dept">Host Department <span class="required">*</span></label>
+                <select id="host-dept" required>
+                  <option value="" disabled selected>Select Department</option>
+                  <option value="Academic - PGP">Academic - PGP</option>
+                  <option value="Academic - Executive">Academic - Executive</option>
+                  <option value="Administration">Administration</option>
+                  <option value="Finance & Accounts">Finance & Accounts</option>
+                  <option value="IT Support & Computer Centre">IT Support / CC</option>
+                  <option value="Human Resources">Human Resources</option>
+                  <option value="Library">Library</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="visitor-id-type">Govt ID Type <span class="required">*</span></label>
+                <select id="visitor-id-type" required>
+                  <option value="" disabled selected>Select ID Type</option>
+                  <option value="Aadhaar Card">Aadhaar Card</option>
+                  <option value="PAN Card">PAN Card</option>
+                  <option value="Passport">Passport</option>
+                  <option value="Driving License">Driving License</option>
+                  <option value="Student / Employee ID">Student / Employee ID</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="visitor-id-number">Govt ID Number <span class="required">*</span></label>
+                <input type="text" id="visitor-id-number" placeholder="Enter ID number" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="visitor-vehicle">Vehicle Number (Optional)</label>
+              <input type="text" id="visitor-vehicle" placeholder="e.g. UP 32 AZ 9999" style="text-transform: uppercase;">
+            </div>
+
+            <button type="submit" class="btn-submit" id="btn-submit-checkin">
+              <span class="btn-icon">📝</span> Generate Entry Pass & Check In
+            </button>
+          </form>
+        </div>
+
+        <!-- Right Panel: Live Logs -->
+        <div class="panel-card log-panel">
+          <div class="panel-header log-header">
+            <div>
+              <h3>Campus Visitor Logs</h3>
+              <p>Real-time monitor of checked-in individuals</p>
+            </div>
+            <!-- Search & Filters -->
+            <div class="filters">
+              <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="log-search" placeholder="Search by name, phone, host...">
+              </div>
+              <select id="log-filter-status" class="filter-status">
+                <option value="all">All Visitors</option>
+                <option value="active" selected>Active Check-ins</option>
+                <option value="checkout">Checked Out</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="logs-table" id="logs-table">
+              <thead>
+                <tr>
+                  <th>Pass ID</th>
+                  <th>Visitor Name</th>
+                  <th>Contact Info</th>
+                  <th>Host & Dept</th>
+                  <th>Check-In Time</th>
+                  <th>Status</th>
+                  <th class="actions-header">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="logs-table-body">
+                <!-- JavaScript will populate rows here dynamically -->
+                <tr class="empty-state">
+                  <td colspan="7">No active visitors checked in at this moment.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Digital Pass Modal -->
+  <div class="modal" id="pass-modal">
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="modal-content animate-in">
+      <button class="modal-close" id="btn-modal-close" aria-label="Close modal">&times;</button>
+      
+      <!-- High-Fidelity Printable Pass -->
+      <div class="pass-card" id="printable-pass-card">
+        <div class="pass-header">
+          <div class="pass-logo">
+            <svg class="crest-svg-small" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="#FFD700" stroke-width="4" />
+              <polygon points="50,15 80,75 20,75" fill="none" stroke="#FFD700" stroke-width="3" />
+              <path d="M 35,50 Q 50,30 65,50" fill="none" stroke="#FFD700" stroke-width="3" />
+              <text x="50" y="88" font-family="'Outfit', sans-serif" font-size="12" font-weight="bold" fill="#FFD700" text-anchor="middle">IIML</text>
+            </svg>
+          </div>
+          <div class="pass-header-text">
+            <h4>INDIAN INSTITUTE OF MANAGEMENT LUCKNOW</h4>
+            <span class="pass-tag">CAMPUS VISITOR PASS</span>
+          </div>
+        </div>
+
+        <div class="pass-body">
+          <!-- Left pass details -->
+          <div class="pass-details">
+            <div class="pass-row">
+              <span class="p-label">Visitor Name</span>
+              <span class="p-value" id="pass-visitor-name">John Doe</span>
+            </div>
+            <div class="pass-row">
+              <span class="p-label">Contact No</span>
+              <span class="p-value" id="pass-visitor-phone">+91 98765 43210</span>
+            </div>
+            <div class="pass-row">
+              <span class="p-label">Host Employee</span>
+              <span class="p-value" id="pass-host-name">Prof. S. Sharma (Academic - PGP)</span>
+            </div>
+            <div class="pass-row">
+              <span class="p-label">Purpose of Visit</span>
+              <span class="p-value" id="pass-purpose">Official Meeting</span>
+            </div>
+            <div class="pass-row">
+              <span class="p-label">Check-In Time</span>
+              <span class="p-value" id="pass-checkin-time">01-Jul-2026 02:50 PM</span>
+            </div>
+            <div class="pass-row" id="pass-checkout-row" style="display: none;">
+              <span class="p-label">Check-Out Time</span>
+              <span class="p-value" id="pass-checkout-time">-</span>
+            </div>
+            <div class="pass-row">
+              <span class="p-label">ID Type & Num</span>
+              <span class="p-value" id="pass-id-details">Aadhaar Card (XXXX-XXXX-1234)</span>
+            </div>
+            <div class="pass-row" id="pass-vehicle-row">
+              <span class="p-label">Vehicle Number</span>
+              <span class="p-value" id="pass-vehicle">UP 32 AZ 9999</span>
+            </div>
+          </div>
+
+          <!-- Right pass QR/Barcode area -->
+          <div class="pass-visual">
+            <div class="pass-badge" id="pass-status-badge">ACTIVE</div>
+            <div class="pass-id-number" id="pass-id-display">PASS-20260701-001</div>
+            
+            <!-- Styled CSS-only QR Code Mock -->
+            <div class="qr-container">
+              <div class="qr-code-mock">
+                <!-- Custom design patterns to look like a QR Code -->
+                <div class="qr-corner qr-top-left"></div>
+                <div class="qr-corner qr-top-right"></div>
+                <div class="qr-corner qr-bottom-left"></div>
+                <div class="qr-pixel-grid">
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                  <span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+              <span class="qr-caption">Scan at Security Gate</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pass-footer">
+          <p>⚠️ This pass is non-transferable and must be displayed on campus at all times.</p>
+          <p class="copyright">IIM Lucknow Security Control Office &copy; 2026</p>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="modal-actions">
+        <button class="btn-print" id="btn-print-pass">🖨️ Print Visitor Pass</button>
+        <button class="btn-close" id="btn-close-pass">Close Portal View</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>
